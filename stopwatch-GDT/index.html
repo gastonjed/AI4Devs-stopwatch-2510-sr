@@ -1,13 +1,166 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Timer and Countdown</title>
-<link rel="stylesheet" href="styles.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Stopwatch – 00:00:00.000</title>
+  <style>
+    :root{
+      --bg:#0f1115;
+      --panel:#151925;
+      --text:#e9eef5;
+      --muted:#a7b0c0;
+      --green:#27ae60;   /* Start / Pause */
+      --blue:#2980b9;    /* Continue */
+      --red:#c0392b;     /* Clear */
+      --shadow: 0 10px 25px rgba(0,0,0,.35);
+      --radius: 16px;
+    }
+    *{box-sizing:border-box}
+    html,body{
+      height:100%;
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--text);
+      background: radial-gradient(1200px 700px at 50% -10%, #1b2030 0%, #0f1115 60%, #0b0e14 100%);
+    }
+    .wrap{
+      min-height:100%;
+      display:grid;
+      grid-template-rows:auto 1fr auto;
+      align-items:center;
+      justify-items:center;
+      gap:28px;
+      padding:28px 18px 40px;
+    }
+    header{
+      width:100%;
+      max-width:760px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--muted);
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      font-size:13px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:10px;
+    }
+    .badge{
+      width:36px; height:36px; border-radius:50%;
+      display:grid; place-items:center;
+      background:linear-gradient(180deg,#2b3754,#1b2438);
+      color:#9fb4ff; font-weight:800;
+      box-shadow:inset 0 1px 0 rgba(255,255,255,.06), var(--shadow);
+      border:1px solid #26314b;
+      user-select:none;
+    }
+    .panel{
+      width:100%;
+      max-width:760px;
+      background:linear-gradient(180deg,#1b2030 0%, #121624 100%);
+      border:1px solid #222a40;
+      border-radius:var(--radius);
+      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.04);
+      padding:32px 24px;
+      display:grid;
+      justify-items:center;
+      gap:24px;
+    }
+    .display{
+      font-variant-numeric: tabular-nums lining-nums;
+      display:flex; align-items:baseline; gap:8px;
+      line-height:1;
+      user-select:none;
+    }
+    .time{
+      font-size: clamp(40px, 10vw, 92px);
+      font-weight:800;
+      letter-spacing: .04em;
+      text-shadow: 0 2px 0 rgba(0,0,0,.25);
+    }
+    .ms{
+      font-size: clamp(18px, 3.6vw, 28px);
+      color: var(--muted);
+      margin-left:6px;
+      transform: translateY(6px);
+    }
+    .controls{
+      display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
+      width:100%;
+    }
+    button{
+      appearance:none;
+      border:none;
+      color:white;
+      font-weight:700;
+      letter-spacing:.02em;
+      padding:14px 22px;
+      border-radius:12px;
+      cursor:pointer;
+      transition: transform .06s ease, filter .2s ease, box-shadow .2s ease, opacity .2s ease;
+      box-shadow: var(--shadow);
+      min-width:160px;
+    }
+    button:active{ transform: translateY(1px) scale(.99); }
+    button:disabled{ opacity:.55; cursor:not-allowed; filter:grayscale(.2); }
+    .btn-toggle{ background: var(--green); }
+    .btn-continue{ background: var(--blue); }
+    .btn-clear{ background: var(--red); }
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+    }
+    footer{
+      color:var(--muted);
+      font-size:12px;
+      text-align:center;
+      opacity:.85;
+    }
+    .visually-hidden{
+      position:absolute !important;
+      height:1px;width:1px;
+      overflow:hidden;
+      clip:rect(1px,1px,1px,1px);
+      white-space:nowrap;
+      border:0;padding:0;margin:-1px;
+    }
+  </style>
 </head>
 <body>
-<h1>Timer and Countdown</h1>
-<script src="script.js"></script>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <div class="badge" aria-hidden="true">GDT</div>
+        <div>Stopwatch</div>
+      </div>
+      <div>Space: Start/Pause/Continue · Esc: Clear</div>
+    </header>
+
+    <main class="panel" role="region" aria-label="Stopwatch">
+      <div class="display" aria-live="polite" aria-atomic="true">
+        <span class="time" id="hh">00</span><span class="time">:</span>
+        <span class="time" id="mm">00</span><span class="time">:</span>
+        <span class="time" id="ss">00</span>
+        <span class="ms" id="ms">.000</span>
+      </div>
+
+      <div class="controls">
+        <button id="toggleBtn" class="btn-toggle" type="button" aria-pressed="false">Start</button>
+        <button id="clearBtn" class="btn-clear" type="button" disabled>Clear</button>
+      </div>
+
+      <p class="hint" id="stateHint">Ready</p>
+      <span class="visually-hidden" id="ariaStatus" role="status" aria-live="assertive"></span>
+    </main>
+
+    <footer>
+      Designed to resemble online-stopwatch.com behavior (simplified). © GDT
+    </footer>
+  </div>
+
+  <script src="./script.js"></script>
 </body>
 </html>
