@@ -164,3 +164,9 @@ OUT
         b add the initials "GDT"
 
 
+## Prompt 3 - Improve
+
+    Functionalities are ok, do not change them!
+    Adapt the design (theme, font, sizes, objects, alignments, etc) as close as possible to this screenshot  (attached) taken from the same site linked previously
+
+![alt text](../res/stopwatch.png)

@@ -1,6 +1,5 @@
-
 (() => {
-  // --- Elements
+  // Elements
   const el = {
     hh: document.getElementById("hh"),
     mm: document.getElementById("mm"),
@@ -8,18 +7,16 @@
     ms: document.getElementById("ms"),
     toggle: document.getElementById("toggleBtn"),
     clear: document.getElementById("clearBtn"),
-    hint: document.getElementById("stateHint"),
     aria: document.getElementById("ariaStatus"),
   };
 
-  // --- State
-  /** "idle" | "running" | "paused" */
-  let mode = "idle";
-  let baseStart = 0;     // ms timestamp when the current run started
-  let carried = 0;       // accumulated elapsed ms from previous runs
+  // State
+  let mode = "idle";    // "idle" | "running" | "paused"
+  let baseStart = 0;    // ms timestamp when current run started
+  let carried = 0;      // accumulated elapsed from previous runs
   let rafId = null;
 
-  // --- Utilities
+  // Helpers
   const pad2 = (n) => (n < 10 ? "0" + n : "" + n);
   const pad3 = (n) => (n < 10 ? "00" + n : n < 100 ? "0" + n : "" + n);
 
@@ -36,7 +33,7 @@
     el.hh.textContent = pad2(hours);
     el.mm.textContent = pad2(mins);
     el.ss.textContent = pad2(secs);
-    el.ms.textContent = "." + pad3(ms);
+    el.ms.textContent = pad3(ms);
   }
 
   function setTitleRunning(msTotal) {
@@ -49,34 +46,26 @@
   }
 
   function setToggleAppearance() {
-    // Start (idle) / Pause (running) are green; Continue (paused) is blue
+    // Start (idle) and Pause (running) use green; Continue (paused) uses blue
     if (mode === "paused") {
       el.toggle.classList.remove("btn-toggle");
       el.toggle.classList.add("btn-continue");
       el.toggle.textContent = "Continue";
       el.toggle.setAttribute("aria-pressed", "false");
-      el.hint.textContent = "Paused";
       el.aria.textContent = "Paused. Press Space to continue.";
     } else if (mode === "running") {
       el.toggle.classList.remove("btn-continue");
       el.toggle.classList.add("btn-toggle");
       el.toggle.textContent = "Pause";
       el.toggle.setAttribute("aria-pressed", "true");
-      el.hint.textContent = "Running";
       el.aria.textContent = "Running. Press Space to pause.";
     } else {
       el.toggle.classList.remove("btn-continue");
       el.toggle.classList.add("btn-toggle");
       el.toggle.textContent = "Start";
       el.toggle.setAttribute("aria-pressed", "false");
-      el.hint.textContent = "Ready";
       el.aria.textContent = "Ready. Press Space to start.";
     }
-  }
-
-  function enableClearIfNeeded() {
-    const elapsed = getElapsedNow();
-    el.clear.disabled = elapsed === 0;
   }
 
   function getElapsedNow() {
@@ -86,7 +75,11 @@
     return carried;
   }
 
-  // --- Core loop
+  function enableClearIfNeeded() {
+    el.clear.disabled = getElapsedNow() === 0;
+  }
+
+  // Loop
   function tick() {
     const elapsed = getElapsedNow();
     render(elapsed);
@@ -95,10 +88,9 @@
     rafId = requestAnimationFrame(tick);
   }
 
+  // Actions
   function start() {
-    if (mode === "idle") {
-      carried = 0;
-    }
+    if (mode === "idle") carried = 0;
     baseStart = performance.now();
     mode = "running";
     setToggleAppearance();
@@ -114,7 +106,7 @@
       cancelAnimationFrame(rafId);
       rafId = null;
     }
-    // Keep the last time on title; no extra "[Paused]" per spec simplicity
+    // Keep last time in title while paused
   }
 
   function resume() {
@@ -126,7 +118,6 @@
   }
 
   function clearAll() {
-    // Clear resets to zero and returns to Start state
     carried = 0;
     baseStart = 0;
     mode = "idle";
@@ -140,21 +131,19 @@
     enableClearIfNeeded();
   }
 
-  // --- Events
+  // Events
   el.toggle.addEventListener("click", () => {
     if (mode === "idle") start();
     else if (mode === "running") pause();
-    else resume(); // paused
+    else resume();
   });
 
-  el.clear.addEventListener("click", () => {
-    clearAll();
-  });
+  el.clear.addEventListener("click", clearAll);
 
-  // Keyboard: Space = toggle, Esc = clear
+  // Keyboard shortcuts
   window.addEventListener("keydown", (e) => {
     if (e.code === "Space") {
-      e.preventDefault(); // prevent scroll / button click quirks
+      e.preventDefault();
       if (mode === "idle") start();
       else if (mode === "running") pause();
       else resume();
@@ -164,9 +153,7 @@
     }
   });
 
-  // Clicking Clear while running should also reset immediately (simple behavior)
-  // Clear is disabled only when elapsed is exactly zero.
-  // Initialize
+  // Init
   render(0);
   setToggleAppearance();
   enableClearIfNeeded();

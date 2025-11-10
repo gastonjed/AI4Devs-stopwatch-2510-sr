@@ -1,30 +1,19 @@
 ## Usage & Technical Notes
 
-**Controls**
+* **Start / Pause / Continue (Space):** Single toggle button. Green for **Start** and **Pause**, blue for **Continue**.
+* **Clear (Esc):** Resets to `00:00:00.000`, disables when already zero.
 
-* **Toggle button (green/blue):**
+**UI & Updates**
 
-  * **Start** (green) → begins counting from `00:00:00.000`.
-  * **Pause** (green) → pauses the running stopwatch.
-  * **Continue** (blue) → resumes from the paused time.
-* **Clear (red):** Resets to `00:00:00.000` and returns the toggle button to **Start**. Disabled when already at zero.
-* **Keyboard shortcuts:**
+* Layout mimics the screenshot: large rounded display with light lavender background and thick dark border; milliseconds sit at the lower-right of the display in a smaller size; large rounded buttons with thick borders and subtle gradient.
+* The document title shows the live time while running.
 
-  * **Space** → Start / Pause / Continue (depending on state).
-  * **Esc** → Clear.
+**State & Logic**
 
-**Display & Updates**
+* States: `idle → running → paused`, with **Clear** returning to `idle`.
+* Rendering uses `requestAnimationFrame` with `performance.now()` for smooth, accurate timing.
 
-* Time shows as **HH:MM:SS** with **milliseconds** in a smaller font, matching the requested style.
-* While running, the **document title** updates with the live time.
-* The UI updates via `requestAnimationFrame` for smooth rendering and accurate timing using `performance.now()`.
+**Limitations**
 
-**State & Transitions**
-
-* States: `idle → running → paused → running …` or `Clear → idle`.
-* **Clear** is available whenever the elapsed time is non-zero; pressing it stops and resets the stopwatch.
-
-**Limitations / Requirements**
-
-* No persistence: reloading the page restarts the stopwatch at zero.
-* Pure HTML/CSS/JS in two files (no external CSS). Works in modern browsers (Chromium, Firefox, Safari) that support `requestAnimationFrame` and `performance.now()`.
+* No persistence; a page reload resets the stopwatch.
+* Works on modern browsers (Chromium, Firefox, Safari, Edge).

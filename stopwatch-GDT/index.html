@@ -6,119 +6,128 @@
   <title>Stopwatch – 00:00:00.000</title>
   <style>
     :root{
-      --bg:#0f1115;
-      --panel:#151925;
-      --text:#e9eef5;
-      --muted:#a7b0c0;
-      --green:#27ae60;   /* Start / Pause */
-      --blue:#2980b9;    /* Continue */
-      --red:#c0392b;     /* Clear */
-      --shadow: 0 10px 25px rgba(0,0,0,.35);
-      --radius: 16px;
+      --bg:#ffffff;
+      --panel-bg:#e9ecff;     /* light lavender like screenshot */
+      --panel-border:#2f2f2f; /* thick dark border */
+      --text:#111;            /* main text (digits/buttons) */
+      --muted:#444;
+      --green:#6ee45a;        /* Start/Pause */
+      --green2:#30b34e;
+      --blue:#4da3ff;         /* Continue */
+      --blue2:#1e88e5;
+      --red:#e43a2f;          /* Clear */
+      --red2:#c53026;
+      --radius:42px;
+      --btn-radius:28px;
+      --border-w:12px;
+      --shadow:0 6px 0 rgba(0,0,0,.15);
+      --inner-pad: clamp(18px, 3.2vw, 38px);
+      --maxw:1200px;
     }
     *{box-sizing:border-box}
-    html,body{
-      height:100%;
-      margin:0;
-      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-      color:var(--text);
-      background: radial-gradient(1200px 700px at 50% -10%, #1b2030 0%, #0f1115 60%, #0b0e14 100%);
-    }
+    html,body{height:100%;margin:0;background:var(--bg);font-family: Arial, Helvetica, "Segoe UI", Tahoma, sans-serif;color:var(--text)}
     .wrap{
       min-height:100%;
       display:grid;
-      grid-template-rows:auto 1fr auto;
-      align-items:center;
+      align-content:center;
       justify-items:center;
-      gap:28px;
-      padding:28px 18px 40px;
+      gap: clamp(16px, 3vw, 28px);
+      padding: clamp(10px, 3vw, 28px);
     }
-    header{
-      width:100%;
-      max-width:760px;
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      color:var(--muted);
-      letter-spacing:.08em;
-      text-transform:uppercase;
-      font-size:13px;
-    }
+
+    /* Tiny GDT mark */
     .brand{
-      display:flex; align-items:center; gap:10px;
-    }
-    .badge{
-      width:36px; height:36px; border-radius:50%;
-      display:grid; place-items:center;
-      background:linear-gradient(180deg,#2b3754,#1b2438);
-      color:#9fb4ff; font-weight:800;
-      box-shadow:inset 0 1px 0 rgba(255,255,255,.06), var(--shadow);
-      border:1px solid #26314b;
+      width:100%;
+      max-width:var(--maxw);
+      display:flex;
+      justify-content:flex-start;
+      align-items:center;
+      gap:10px;
+      font-weight:700;
+      color:#222;
+      letter-spacing:.06em;
       user-select:none;
     }
+    .badge{
+      width:40px;height:40px;border-radius:50%;
+      display:grid;place-items:center;
+      background:#f2f4ff;border:2px solid #9499b7;color:#4b5091;
+      font-weight:800;
+    }
+
+    /* DISPLAY like online-stopwatch */
     .panel{
       width:100%;
-      max-width:760px;
-      background:linear-gradient(180deg,#1b2030 0%, #121624 100%);
-      border:1px solid #222a40;
-      border-radius:var(--radius);
-      box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,.04);
-      padding:32px 24px;
-      display:grid;
-      justify-items:center;
-      gap:24px;
+      max-width:var(--maxw);
+      background:var(--panel-bg);
+      border: var(--border-w) solid var(--panel-border);
+      border-radius: var(--radius);
+      padding: clamp(12px, 2vw, 20px);
     }
     .display{
-      font-variant-numeric: tabular-nums lining-nums;
-      display:flex; align-items:baseline; gap:8px;
+      position:relative;
+      width:100%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      border-radius: calc(var(--radius) - 10px);
+      padding: var(--inner-pad);
       line-height:1;
       user-select:none;
     }
-    .time{
-      font-size: clamp(40px, 10vw, 92px);
-      font-weight:800;
-      letter-spacing: .04em;
-      text-shadow: 0 2px 0 rgba(0,0,0,.25);
+    .digits{
+      font-variant-numeric: tabular-nums lining-nums;
+      font-weight:900;
+      letter-spacing: .02em;
+      font-size: clamp(56px, 16vw, 190px);
+      text-align:center;
+      color:#000;
     }
     .ms{
-      font-size: clamp(18px, 3.6vw, 28px);
-      color: var(--muted);
-      margin-left:6px;
-      transform: translateY(6px);
+      position:absolute;
+      right: clamp(28px, 4vw, 48px);
+      bottom: clamp(18px, 2.6vw, 28px);
+      font-size: clamp(14px, 3.6vw, 44px);
+      font-weight:700;
+      color:#000;
     }
+
+    /* CONTROLS like screenshot */
     .controls{
-      display:flex; gap:14px; flex-wrap:wrap; justify-content:center;
       width:100%;
+      max-width:var(--maxw);
+      display:flex;
+      gap: clamp(16px, 4vw, 40px);
+      justify-content:center;
+      margin-top: clamp(8px, 2.4vw, 20px);
+      flex-wrap:wrap;
     }
     button{
-      appearance:none;
-      border:none;
-      color:white;
-      font-weight:700;
-      letter-spacing:.02em;
-      padding:14px 22px;
-      border-radius:12px;
-      cursor:pointer;
-      transition: transform .06s ease, filter .2s ease, box-shadow .2s ease, opacity .2s ease;
+      appearance:none;border:none;cursor:pointer;
+      padding: clamp(12px, 2.8vw, 28px) clamp(20px, 6vw, 80px);
+      border-radius: var(--btn-radius);
+      font-size: clamp(22px, 5.6vw, 64px);
+      font-weight:700;color:#000;
+      border: var(--border-w) solid var(--panel-border);
       box-shadow: var(--shadow);
-      min-width:160px;
+      transition: transform .06s ease, filter .15s ease;
     }
-    button:active{ transform: translateY(1px) scale(.99); }
-    button:disabled{ opacity:.55; cursor:not-allowed; filter:grayscale(.2); }
-    .btn-toggle{ background: var(--green); }
-    .btn-continue{ background: var(--blue); }
-    .btn-clear{ background: var(--red); }
-    .hint{
-      color:var(--muted);
-      font-size:12px;
-      text-align:center;
+    button:active{ transform: translateY(2px); }
+    button:disabled{ filter: grayscale(.2) brightness(.92); cursor:not-allowed; }
+
+    .btn-toggle{
+      background: linear-gradient(#7af063, var(--green2));
     }
-    footer{
-      color:var(--muted);
-      font-size:12px;
-      text-align:center;
-      opacity:.85;
+    .btn-continue{
+      background: linear-gradient(var(--blue), var(--blue2));
+      color:#fff; /* blue legibility */
     }
+    .btn-clear{
+      background: linear-gradient(var(--red), var(--red2));
+      color:#fff;
+    }
+
+    /* Accessibility helpers (not visible) */
     .visually-hidden{
       position:absolute !important;
       height:1px;width:1px;
@@ -127,38 +136,35 @@
       white-space:nowrap;
       border:0;padding:0;margin:-1px;
     }
+
+    /* Mobile safe area */
+    @supports (padding:max(0px)) {
+      .wrap{ padding-left:max(12px, env(safe-area-inset-left)); padding-right:max(12px, env(safe-area-inset-right)); }
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <header>
-      <div class="brand">
-        <div class="badge" aria-hidden="true">GDT</div>
-        <div>Stopwatch</div>
-      </div>
-      <div>Space: Start/Pause/Continue · Esc: Clear</div>
-    </header>
+    <div class="brand" aria-hidden="true">
+      <div class="badge">GDT</div>
+      <div>Stopwatch</div>
+    </div>
 
     <main class="panel" role="region" aria-label="Stopwatch">
       <div class="display" aria-live="polite" aria-atomic="true">
-        <span class="time" id="hh">00</span><span class="time">:</span>
-        <span class="time" id="mm">00</span><span class="time">:</span>
-        <span class="time" id="ss">00</span>
-        <span class="ms" id="ms">.000</span>
+        <div class="digits">
+          <span id="hh">00</span><span>:</span><span id="mm">00</span><span>:</span><span id="ss">00</span>
+        </div>
+        <div class="ms" id="ms">000</div>
       </div>
-
-      <div class="controls">
-        <button id="toggleBtn" class="btn-toggle" type="button" aria-pressed="false">Start</button>
-        <button id="clearBtn" class="btn-clear" type="button" disabled>Clear</button>
-      </div>
-
-      <p class="hint" id="stateHint">Ready</p>
-      <span class="visually-hidden" id="ariaStatus" role="status" aria-live="assertive"></span>
     </main>
 
-    <footer>
-      Designed to resemble online-stopwatch.com behavior (simplified). © GDT
-    </footer>
+    <div class="controls">
+      <button id="toggleBtn" class="btn-toggle" type="button" aria-pressed="false">Start</button>
+      <button id="clearBtn" class="btn-clear" type="button" disabled>Clear</button>
+    </div>
+
+    <span class="visually-hidden" id="ariaStatus" role="status" aria-live="assertive"></span>
   </div>
 
   <script src="./script.js"></script>
