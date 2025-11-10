@@ -170,3 +170,10 @@ OUT
     Adapt the design (theme, font, sizes, objects, alignments, etc) as close as possible to this screenshot  (attached) taken from the same site linked previously
 
 ![alt text](../res/stopwatch.png)
+
+
+## Prompt 4 - Modify style
+
+    It looks better. Additional changes:
+    - Font does not resemble the provided example
+    - Buttons 1 and 2 must have the same size and be symmetrical. After clicking on button 1 (start/pause/continue) the size and position must be the same

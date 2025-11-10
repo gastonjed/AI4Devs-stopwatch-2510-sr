@@ -46,7 +46,7 @@
   }
 
   function setToggleAppearance() {
-    // Start (idle) and Pause (running) use green; Continue (paused) uses blue
+    // Start (idle) & Pause (running) => green, Continue (paused) => blue
     if (mode === "paused") {
       el.toggle.classList.remove("btn-toggle");
       el.toggle.classList.add("btn-continue");
@@ -106,7 +106,6 @@
       cancelAnimationFrame(rafId);
       rafId = null;
     }
-    // Keep last time in title while paused
   }
 
   function resume() {
